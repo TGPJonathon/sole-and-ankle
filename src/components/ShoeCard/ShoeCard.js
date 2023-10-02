@@ -36,14 +36,31 @@ const ShoeCard = ({
       <Wrapper>
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
+          {
+            //I promise I would not have this very nasty nested component in an actual
+            //project :(
+            //Just wanted to finish fast
+          }
+          {variant !== 'default' ? (
+            <Tag variant={variant}>
+              {variant === 'new-release' ? (
+                <span>Just released!</span>
+              ) : variant === 'on-sale' ? (
+                <span>Sale</span>
+              ) : null}
+            </Tag>
+          ) : null}
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          <Price salePrice={salePrice}>{formatPrice(price)}</Price>
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          {variant === 'on-sale' ? (
+            <SalePrice>{formatPrice(salePrice)}</SalePrice>
+          ) : null}
         </Row>
       </Wrapper>
     </Link>
@@ -55,15 +72,24 @@ const Link = styled.a`
   color: inherit;
 `;
 
-const Wrapper = styled.article``;
+const Wrapper = styled.article`
+  display: flex;
+  flex-direction: column;
+`;
 
 const ImageWrapper = styled.div`
   position: relative;
+  max-width: 500px;
 `;
 
-const Image = styled.img``;
+const Image = styled.img`
+  width: 100%;
+  min-width: 0;
+`;
 
 const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
   font-size: 1rem;
 `;
 
@@ -72,10 +98,22 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
+const Price = styled.span`
+  text-decoration: ${(props) => (props.salePrice ? 'line-through' : null)};
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
+`;
+
+const Tag = styled.span`
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: ${(props) =>
+    props.variant === 'new-release' ? '#6868D9' : '#C5295D'};
+  color: white;
+  padding: 8px 16px;
 `;
 
 const SalePrice = styled.span`
